@@ -1,0 +1,19 @@
+version: '3.1'
+
+services:
+
+  db:
+    build: db
+    container_name: test_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: dvdrental
+    ports:
+      - 5432:5432
+  rd:
+    build: redis
+    container_name: test_rd
+  service:
+    build: server
+    container_name: test_ser
