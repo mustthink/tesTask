@@ -1,31 +1,36 @@
 package main
 
+import (
+	"log"
+	"net/http"
+	"os"
+	"server/db"
+	"server/handlers"
+)
+
 func main() {
-	/*
-		addr := os.Getenv("SERVER_URL")
-		dsn := os.Getenv("DATABASE_URL")
+	connStr := "user=postgres password=123456 dbname=dvdrental sslmode=disable"
+	addr := os.Getenv("SERVER_URL")
 
-		infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
-		errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
-		timeLog := log.New(os.Stderr, "TIME\t", log.Ldate|log.Ltime|log.Lshortfile)
+	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
+	timeLog := log.New(os.Stderr, "TIME\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-		db, err := db.OpenDB()
-		if err != nil {
-			errorLog.Fatal(err)
-		}
-		defer db.Close()
+	db, err := db.OpenDB(connStr)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+	defer db.Close()
 
-		app := handlers.NewApplication()
+	app := handlers.NewApplication(errorLog, timeLog, db, &addr)
 
-		srv := &http.Server{
-			Addr:     *addr,
-			ErrorLog: errorLog,
-			Handler:  app.Routes(),
-		}
+	srv := &http.Server{
+		Addr:     addr,
+		ErrorLog: errorLog,
+		Handler:  app.Routes(),
+	}
 
-		app.InfoLog().Printf("Запуск веб-сервера на %s", *addr)
-		err = srv.ListenAndServe()
-		app.ErrorLog().Fatal(err)
+	log.Println("Запуск веб-сервера на %s", addr)
+	err = srv.ListenAndServe()
+	errorLog.Fatal(err)
 
-	*/
 }
