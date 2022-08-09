@@ -20,7 +20,7 @@ func NewApplication(errorLog *log.Logger, timeLog *log.Logger, db *sql.DB, url *
 	return &application{
 		errorLog: errorLog,
 		timeLog:  timeLog,
-		data:     &data.Service{DB: db},
+		data:     &data.Service{DB: db, Cache: map[string][]byte{}},
 		url:      url,
 	}
 }

@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"errors"
 	_ "github.com/lib/pq"
 )
 
@@ -19,3 +20,5 @@ func OpenDB(connStr string) (*sql.DB, error) {
 
 	return db, nil
 }
+
+var ErrNoRecord = errors.New("error: подходящей записи не найдено")

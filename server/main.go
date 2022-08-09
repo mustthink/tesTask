@@ -10,7 +10,7 @@ import (
 
 func main() {
 	connStr := "user=postgres password=123456 dbname=dvdrental sslmode=disable"
-	addr := os.Getenv("SERVER_URL")
+	addr := "localhost:8080" //os.Getenv("SERVER_URL")
 
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 	timeLog := log.New(os.Stderr, "TIME\t", log.Ldate|log.Ltime|log.Lshortfile)
@@ -29,7 +29,7 @@ func main() {
 		Handler:  app.Routes(),
 	}
 
-	log.Println("Запуск веб-сервера на %s", addr)
+	log.Println("Запуск веб-сервера на", addr)
 	err = srv.ListenAndServe()
 	errorLog.Fatal(err)
 
