@@ -22,8 +22,22 @@ func (m *Service) AddToCache(value []byte, key string) {
 }
 
 func (m *Service) ShowFromCache(key string) (value []byte, err error) {
-	if m.Cache[key] == nil {
-		return m.RedStore.Get(ctx, key).Bytes()
+	start := time.Now()
+	val := m.Cache[key]
+	if val == nil {
+		val, err = m.RedStore.Get(ctx, key).Bytes()
+		if err == redis.Nil {
+			return nil, nil
+		}
+		err := m.timeLog(key, time.Since(start).Microseconds(), "redis")
+		if err != nil {
+			return nil, err
+		}
+		return val, nil
+	}
+	err = m.timeLog(key, time.Since(start).Microseconds(), "cache")
+	if err != nil {
+		return nil, err
 	}
 	return m.Cache[key], nil
 }
@@ -31,4 +45,15 @@ func (m *Service) ShowFromCache(key string) (value []byte, err error) {
 func (m *Service) clearCache(key string) {
 	<-time.After(time.Second * 15)
 	delete(m.Cache, key)
+}
+
+func (m *Service) timeLog(r string, t int64, s string) error {
+
+	stmt := `insert into responsetimelog (request, timeof, showfrom) values ($1, $2, $3)`
+	r = "film/" + r
+	_, err := m.DB.Exec(stmt, r, t, s)
+	if err != nil {
+		return err
+	}
+	return nil
 }

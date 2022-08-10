@@ -49,6 +49,7 @@ func (app *application) showFilm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	incache := true
+	//start := time.Now()
 	s := &data.Film{}
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	title := ""
@@ -71,7 +72,7 @@ func (app *application) showFilm(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			app.serverError(w, err)
 		}
-		s, err = app.data.CheckCache(string(id))
+		s, err = app.data.CheckCache(strconv.Itoa(id))
 		if err != nil {
 			app.serverError(w, err)
 		}

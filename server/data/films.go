@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"server/db"
+	"strconv"
 	"time"
 )
 
@@ -69,6 +70,7 @@ func (m *Service) InsertFilm(film *Film) error {
 }
 
 func (m *Service) GetFilmViaID(id int) (*Film, error) {
+	start := time.Now()
 	film := &Film{}
 	stmt := `select * from film where film_id = $1`
 
@@ -81,10 +83,15 @@ func (m *Service) GetFilmViaID(id int) (*Film, error) {
 			return nil, err
 		}
 	}
+	err = m.timeLog(strconv.Itoa(id), time.Since(start).Microseconds(), "db")
+	if err != nil {
+		return nil, err
+	}
 	return film, nil
 }
 
 func (m *Service) GetFilmViaTitle(title string) (*Film, error) {
+	start := time.Now()
 	film := &Film{}
 	stmt := `select * from film where title = $1`
 
@@ -97,6 +104,10 @@ func (m *Service) GetFilmViaTitle(title string) (*Film, error) {
 		} else {
 			return nil, err
 		}
+	}
+	err = m.timeLog(title, time.Since(start).Microseconds(), "db")
+	if err != nil {
+		return nil, err
 	}
 	return film, nil
 }

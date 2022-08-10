@@ -24,11 +24,13 @@ func main() {
 
 	cl := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Password: "123456",
+		DB:       0, // use default DB
 	})
 	defer cl.Close()
 
+	_, err = pg.Exec("DROP TABLE responsetimelog")
+	_, err = pg.Exec("CREATE TABLE responsetimelog ( id SERIAL PRIMARY KEY, request CHARACTER VARYING(30),  timeof INTEGER, showfrom CHARACTER VARYING(30));")
 	app := handlers.NewApplication(errorLog, timeLog, pg, cl, &addr)
 
 	srv := &http.Server{

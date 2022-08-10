@@ -13,13 +13,7 @@ services:
       - 5432:5432
   rd:
     build: redis
-    container_name: test_rd
+    restart: always
     ports:
       - 6379:6379
-  service:
-    build: server
-    container_name: test_ser
-    environment:
-      SERVER_URL: localhost:8080
-    ports:
-      - 8080:8080
+    command: redis-server --loglevel warning --requirepass 123456
