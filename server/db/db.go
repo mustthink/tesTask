@@ -6,6 +6,8 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var ErrNoRecord = errors.New("error: подходящей записи не найдено")
+
 func OpenDB(connStr string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -20,5 +22,3 @@ func OpenDB(connStr string) (*sql.DB, error) {
 
 	return db, nil
 }
-
-var ErrNoRecord = errors.New("error: подходящей записи не найдено")

@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
+	"github.com/go-redis/redis/v9"
 	"log"
 	"net/http"
 	"runtime/debug"
@@ -16,12 +17,16 @@ type application struct {
 	url      *string
 }
 
-func NewApplication(errorLog *log.Logger, timeLog *log.Logger, db *sql.DB, url *string) *application {
+func NewApplication(errorLog *log.Logger, timeLog *log.Logger, db *sql.DB, cl *redis.Client, url *string) *application {
 	return &application{
 		errorLog: errorLog,
 		timeLog:  timeLog,
-		data:     &data.Service{DB: db, Cache: map[string][]byte{}},
-		url:      url,
+		data: &data.Service{
+			DB:       db,
+			Cache:    map[string][]byte{},
+			RedStore: cl,
+		},
+		url: url,
 	}
 }
 

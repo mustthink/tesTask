@@ -42,9 +42,12 @@ type Film struct {
 }
 
 func (m *Service) CheckCache(key string) (film *Film, err error) {
-	jdata := m.ShowFromCache(key)
+	jdata, err := m.ShowFromCache(key)
+	if err != nil {
+		return nil, err
+	}
 	if jdata != nil {
-		err := json.Unmarshal(jdata, &film)
+		err = json.Unmarshal(jdata, &film)
 		if err != nil {
 			return nil, err
 		}
